@@ -1,0 +1,1293 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>পরিচালক ড্যাশবোর্ড – জ্ঞান অন্বেষণ প্রি-ক্যাডেট স্কুল</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  
+  <style>
+    :root {
+      --brand-primary: #0b6efd;
+      --brand-dark: #0f172a;
+      --brand-light: #f8fafc;
+      --sidebar-bg: #111827;
+      --card-bg: #ffffff;
+      --shadow-soft: 0 10px 20px rgba(0,0,0,0.05);
+      --font-family-bengali: 'Noto Sans Bengali', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-family-bengali);
+      background-color: var(--brand-light);
+      color: var(--brand-dark);
+    }
+    .navbar-brand {
+      font-weight: 700;
+      color: var(--bs-white) !important;
+    }
+    .sidebar {
+      width: 250px;
+      background-color: var(--sidebar-bg);
+      color: var(--brand-light);
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      transition: all 0.3s;
+      z-index: 1000;
+      padding-top: 2rem;
+    }
+    .sidebar .nav-link {
+      color: #9ca3af;
+      padding: 1rem 1.5rem;
+      border-radius: 0.5rem;
+      transition: all 0.2s;
+    }
+    .sidebar .nav-link.active, .sidebar .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: var(--bs-white);
+    }
+    .main-content {
+      margin-left: 250px;
+      padding: 2rem;
+      transition: all 0.3s;
+    }
+    .card {
+      border: none;
+      border-radius: 1rem;
+      box-shadow: var(--shadow-soft);
+      margin-bottom: 2rem;
+    }
+    .card-title {
+      font-weight: 600;
+      color: var(--brand-dark);
+    }
+    .form-control, .form-select {
+      border-radius: 0.5rem;
+      border-color: #e5e7eb;
+    }
+    .btn-primary {
+      background-color: var(--brand-primary);
+      border-color: var(--brand-primary);
+      border-radius: 0.5rem;
+    }
+    .btn-primary:hover {
+      background-color: #0c61e8;
+      border-color: #0c61e8;
+    }
+    .table thead th {
+      background-color: #f3f4f6;
+      border-bottom: 2px solid #e5e7eb;
+    }
+    .table tbody td {
+      vertical-align: middle;
+    }
+    .btn-edit, .btn-delete {
+      padding: 0.375rem 0.75rem;
+      border-radius: 0.5rem;
+    }
+    .btn-edit { background-color: #2563eb; color: white; border: none; }
+    .btn-delete { background-color: #dc2626; color: white; border: none; }
+    .alert-message {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1050;
+      min-width: 300px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 0.5rem;
+    }
+    .modal-content {
+      border-radius: 1rem;
+    }
+    .modal-header {
+      border-bottom: none;
+    }
+    .modal-footer {
+      border-top: none;
+    }
+    .loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.8);
+      z-index: 2000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5rem;
+      color: var(--brand-primary);
+    }
+    .loader.hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div id="loader" class="loader hidden">
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+
+<!-- Sidebar -->
+<div class="sidebar d-flex flex-column p-3">
+  <h4 class="mb-4">পরিচালক প্যানেল</h4>
+  <ul class="nav nav-pills flex-column mb-auto" id="dashboard-nav">
+    <li class="nav-item">
+      <a href="#notices" class="nav-link active" data-content-id="notices-content">
+        <i class="bi bi-bell-fill me-2"></i> নোটিশ
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="#assignments" class="nav-link" data-content-id="assignments-content">
+        <i class="bi bi-journal-check me-2"></i> অ্যাসাইনমেন্ট
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="#booklists" class="nav-link" data-content-id="booklists-content">
+        <i class="bi bi-book-half me-2"></i> বইয়ের তালিকা
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="#fees" class="nav-link" data-content-id="fees-content">
+        <i class="bi bi-cash me-2"></i> ফি তথ্য
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="#routines" class="nav-link" data-content-id="routines-content">
+        <i class="bi bi-calendar3-fill me-2"></i> রুটিন
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="#gallery" class="nav-link" data-content-id="gallery-content">
+        <i class="bi bi-images me-2"></i> গ্যালারী
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="#vacations" class="nav-link" data-content-id="vacations-content">
+        <i class="bi bi-airplane-fill me-2"></i> ছুটির তালিকা
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="#principal" class="nav-link" data-content-id="principal-content">
+        <i class="bi bi-person-badge-fill me-2"></i> প্রধান শিক্ষকের বার্তা
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="#managing" class="nav-link" data-content-id="managing-content">
+        <i class="bi bi-people-fill me-2"></i> ম্যানেজিং কমিটি
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="#school-details" class="nav-link" data-content-id="school-details-content">
+        <i class="bi bi-info-circle-fill me-2"></i> স্কুল বিবরণ
+      </a>
+    </li>
+  </ul>
+</div>
+
+<!-- Main Content Area -->
+<div class="main-content">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">ড্যাশবোর্ড</h2>
+  </div>
+
+  <div id="content-area">
+    
+    <!-- Notices Section -->
+    <div id="notices-content" class="content-section">
+      <div class="card p-4">
+        <h3 class="card-title d-flex justify-content-between align-items-center">
+          নোটিশ
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#noticeModal" data-action="add">
+            <i class="bi bi-plus-lg me-1"></i> নতুন নোটিশ যোগ করুন
+          </button>
+        </h3>
+        <hr/>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">শিরোনাম</th>
+                <th scope="col">বিষয়</th>
+                <th scope="col">তারিখ</th>
+                <th scope="col" style="width: 150px;">কার্যক্রম</th>
+              </tr>
+            </thead>
+            <tbody id="notices-table-body">
+              <!-- Data will be loaded here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Assignments Section -->
+    <div id="assignments-content" class="content-section d-none">
+      <div class="card p-4">
+        <h3 class="card-title d-flex justify-content-between align-items-center">
+          অ্যাসাইনমেন্ট
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignmentModal" data-action="add">
+            <i class="bi bi-plus-lg me-1"></i> নতুন অ্যাসাইনমেন্ট যোগ করুন
+          </button>
+        </h3>
+        <hr/>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">ক্লাস</th>
+                <th scope="col">বিষয়</th>
+                <th scope="col">শিরোনাম</th>
+                <th scope="col">জমার শেষ তারিখ</th>
+                <th scope="col">ফাইল</th>
+                <th scope="col" style="width: 150px;">কার্যক্রম</th>
+              </tr>
+            </thead>
+            <tbody id="assignments-table-body">
+              <!-- Data will be loaded here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Book Lists Section -->
+    <div id="booklists-content" class="content-section d-none">
+      <div class="card p-4">
+        <h3 class="card-title d-flex justify-content-between align-items-center">
+          বইয়ের তালিকা
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#booklistModal" data-action="add">
+            <i class="bi bi-plus-lg me-1"></i> নতুন বই যোগ করুন
+          </button>
+        </h3>
+        <hr/>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">ক্লাস</th>
+                <th scope="col">বইয়ের নাম</th>
+                <th scope="col">লেখক</th>
+                <th scope="col" style="width: 150px;">কার্যক্রম</th>
+              </tr>
+            </thead>
+            <tbody id="booklists-table-body">
+              <!-- Data will be loaded here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fees Section -->
+    <div id="fees-content" class="content-section d-none">
+      <div class="card p-4">
+        <h3 class="card-title d-flex justify-content-between align-items-center">
+          ফি তথ্য
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#feesModal" data-action="add">
+            <i class="bi bi-plus-lg me-1"></i> নতুন ফি যোগ করুন
+          </button>
+        </h3>
+        <hr/>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">ক্লাস</th>
+                <th scope="col">মাসিক বেতন</th>
+                <th scope="col">অন্যান্য চার্জ</th>
+                <th scope="col" style="width: 150px;">কার্যক্রম</th>
+              </tr>
+            </thead>
+            <tbody id="fees-table-body">
+              <!-- Data will be loaded here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Routines Section -->
+    <div id="routines-content" class="content-section d-none">
+      <div class="card p-4">
+        <h3 class="card-title">রুটিন</h3>
+        <hr/>
+        <div class="d-flex flex-column gap-4">
+          <div class="card p-4 bg-light">
+            <h5 class="card-title">ক্লাস রুটিন</h5>
+            <div class="row g-3">
+              <div class="col-md-9">
+                <input type="text" id="classRoutineUrl" class="form-control" placeholder="ক্লাস রুটিনের ছবির URL">
+              </div>
+              <div class="col-md-3">
+                <button class="btn btn-primary w-100" id="saveClassRoutineBtn">সংরক্ষণ করুন</button>
+              </div>
+            </div>
+          </div>
+          <div class="card p-4 bg-light">
+            <h5 class="card-title">পরীক্ষার রুটিন</h5>
+            <div class="row g-3">
+              <div class="col-md-9">
+                <input type="text" id="examRoutineUrl" class="form-control" placeholder="পরীক্ষার রুটিনের ছবির URL">
+              </div>
+              <div class="col-md-3">
+                <button class="btn btn-primary w-100" id="saveExamRoutineBtn">সংরক্ষণ করুন</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gallery Section -->
+    <div id="gallery-content" class="content-section d-none">
+      <div class="card p-4">
+        <h3 class="card-title">গ্যালারী</h3>
+        <hr/>
+        
+        <!-- Image Section -->
+        <div class="mb-4">
+          <h5 class="card-title">ছবি</h5>
+          <div class="d-flex mb-3 gap-2">
+            <input type="text" id="newImageUrl" class="form-control" placeholder="ছবির URL">
+            <input type="text" id="newImageCaption" class="form-control" placeholder="ক্যাপশন">
+            <button class="btn btn-primary" id="addImageBtn">যোগ করুন</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">ছবি URL</th>
+                  <th scope="col">ক্যাপশন</th>
+                  <th scope="col" style="width: 150px;">কার্যক্রম</th>
+                </tr>
+              </thead>
+              <tbody id="images-table-body">
+                <!-- Data will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Video Section -->
+        <div>
+          <h5 class="card-title">ভিডিও</h5>
+          <div class="d-flex mb-3 gap-2">
+            <input type="text" id="newVideoUrl" class="form-control" placeholder="ভিডিও URL (YouTube)">
+            <input type="text" id="newVideoCaption" class="form-control" placeholder="ক্যাপশন">
+            <button class="btn btn-primary" id="addVideoBtn">যোগ করুন</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">ভিডিও URL</th>
+                  <th scope="col">ক্যাপশন</th>
+                  <th scope="col" style="width: 150px;">কার্যক্রম</th>
+                </tr>
+              </thead>
+              <tbody id="videos-table-body">
+                <!-- Data will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vacations Section -->
+    <div id="vacations-content" class="content-section d-none">
+      <div class="card p-4">
+        <h3 class="card-title d-flex justify-content-between align-items-center">
+          ছুটির তালিকা
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#vacationModal" data-action="add">
+            <i class="bi bi-plus-lg me-1"></i> নতুন ছুটি যোগ করুন
+          </button>
+        </h3>
+        <hr/>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">নাম</th>
+                <th scope="col">তারিখ</th>
+                <th scope="col">মোট দিন</th>
+                <th scope="col" style="width: 150px;">কার্যক্রম</th>
+              </tr>
+            </thead>
+            <tbody id="vacations-table-body">
+              <!-- Data will be loaded here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Principal's Message Section -->
+    <div id="principal-content" class="content-section d-none">
+      <div class="card p-4">
+        <h3 class="card-title">প্রধান শিক্ষকের বার্তা</h3>
+        <hr/>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="principalName" class="form-label">নাম</label>
+            <input type="text" class="form-control" id="principalName">
+          </div>
+          <div class="col-md-6">
+            <label for="principalImage" class="form-label">ছবির URL</label>
+            <input type="text" class="form-control" id="principalImage">
+          </div>
+          <div class="col-12">
+            <label for="principalMessage" class="form-label">বার্তা</label>
+            <textarea class="form-control" id="principalMessage" rows="10"></textarea>
+          </div>
+          <div class="col-12">
+            <button class="btn btn-primary" id="savePrincipalBtn">সংরক্ষণ করুন</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Managing Committee Section -->
+    <div id="managing-content" class="content-section d-none">
+      <div class="card p-4">
+        <h3 class="card-title d-flex justify-content-between align-items-center">
+          ম্যানেজিং কমিটির সদস্য
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#memberModal" data-action="add">
+            <i class="bi bi-plus-lg me-1"></i> নতুন সদস্য যোগ করুন
+          </button>
+        </h3>
+        <hr/>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">নাম</th>
+                <th scope="col">পদ</th>
+                <th scope="col">ছবি URL</th>
+                <th scope="col" style="width: 150px;">কার্যক্রম</th>
+              </tr>
+            </thead>
+            <tbody id="managing-table-body">
+              <!-- Data will be loaded here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <!-- School Details Section -->
+    <div id="school-details-content" class="content-section d-none">
+      <div class="card p-4">
+        <h3 class="card-title">স্কুল বিবরণ</h3>
+        <hr/>
+        <div class="row g-3">
+          <div class="col-12">
+            <label for="schoolHistory" class="form-label">ইতিহাস</label>
+            <textarea class="form-control" id="schoolHistory" rows="5"></textarea>
+          </div>
+          <div class="col-12">
+            <label for="schoolMission" class="form-label">মিশন</label>
+            <textarea class="form-control" id="schoolMission" rows="5"></textarea>
+          </div>
+          <div class="col-12">
+            <label for="schoolVision" class="form-label">লক্ষ্য</label>
+            <textarea class="form-control" id="schoolVision" rows="5"></textarea>
+          </div>
+          <div class="col-12">
+            <button class="btn btn-primary" id="saveSchoolDetailsBtn">সংরক্ষণ করুন</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- All Modals -->
+
+<!-- Notice Modal -->
+<div class="modal fade" id="noticeModal" tabindex="-1" aria-labelledby="noticeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="noticeModalLabel">নতুন নোটিশ</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="noticeForm">
+          <input type="hidden" id="noticeId">
+          <div class="mb-3">
+            <label for="noticeTitle" class="form-label">শিরোনাম</label>
+            <input type="text" class="form-control" id="noticeTitle" required>
+          </div>
+          <div class="mb-3">
+            <label for="noticeTopic" class="form-label">বিষয়</label>
+            <select class="form-select" id="noticeTopic" required>
+              <option value="general">সাধারণ</option>
+              <option value="academic">একাডেমিক</option>
+              <option value="holiday">ছুটি</option>
+              <option value="exam">পরীক্ষা</option>
+              <option value="admission">ভর্তি</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="noticeDate" class="form-label">তারিখ</label>
+            <input type="date" class="form-control" id="noticeDate" required>
+          </div>
+          <div class="mb-3">
+            <label for="noticeContent" class="form-label">বিষয়বস্তু</label>
+            <textarea class="form-control" id="noticeContent" rows="5" required></textarea>
+          </div>
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary">সংরক্ষণ করুন</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Assignment Modal -->
+<div class="modal fade" id="assignmentModal" tabindex="-1" aria-labelledby="assignmentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="assignmentModalLabel">নতুন অ্যাসাইনমেন্ট</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="assignmentForm">
+          <input type="hidden" id="assignmentId">
+          <div class="mb-3">
+            <label for="assignmentClass" class="form-label">ক্লাস</label>
+            <select class="form-select" id="assignmentClass" required>
+              <option value="nursery">নার্সারি</option>
+              <option value="class_1">প্রথম শ্রেণী</option>
+              <option value="class_2">দ্বিতীয় শ্রেণী</option>
+              <option value="class_3">তৃতীয় শ্রেণী</option>
+              <option value="class_4">চতুর্থ শ্রেণী</option>
+              <option value="class_5">পঞ্চম শ্রেণী</option>
+              <option value="class_6">ষষ্ঠ শ্রেণী</option>
+              <option value="class_7">সপ্তম শ্রেণী</option>
+              <option value="class_8">অষ্টম শ্রেণী</option>
+              <option value="class_9">নবম শ্রেণী</option>
+              <option value="class_10">দশম শ্রেণী</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="assignmentSubject" class="form-label">বিষয়</label>
+            <input type="text" class="form-control" id="assignmentSubject" required>
+          </div>
+          <div class="mb-3">
+            <label for="assignmentTitle" class="form-label">শিরোনাম</label>
+            <input type="text" class="form-control" id="assignmentTitle" required>
+          </div>
+          <div class="mb-3">
+            <label for="assignmentDueDate" class="form-label">জমার শেষ তারিখ</label>
+            <input type="date" class="form-control" id="assignmentDueDate" required>
+          </div>
+          <div class="mb-3">
+            <label for="assignmentFileUrl" class="form-label">ফাইল URL</label>
+            <input type="url" class="form-control" id="assignmentFileUrl" required>
+          </div>
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary">সংরক্ষণ করুন</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Booklist Modal -->
+<div class="modal fade" id="booklistModal" tabindex="-1" aria-labelledby="booklistModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="booklistModalLabel">নতুন বই</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="booklistForm">
+          <input type="hidden" id="booklistId">
+          <div class="mb-3">
+            <label for="booklistClass" class="form-label">ক্লাস</label>
+            <select class="form-select" id="booklistClass" required>
+              <option value="nursery">নার্সারি</option>
+              <option value="class_1">প্রথম শ্রেণী</option>
+              <option value="class_2">দ্বিতীয় শ্রেণী</option>
+              <option value="class_3">তৃতীয় শ্রেণী</option>
+              <option value="class_4">চতুর্থ শ্রেণী</option>
+              <option value="class_5">পঞ্চম শ্রেণী</option>
+              <option value="class_6">ষষ্ঠ শ্রেণী</option>
+              <option value="class_7">সপ্তম শ্রেণী</option>
+              <option value="class_8">অষ্টম শ্রেণী</option>
+              <option value="class_9">নবম শ্রেণী</option>
+              <option value="class_10">দশম শ্রেণী</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="booklistName" class="form-label">বইয়ের নাম</label>
+            <input type="text" class="form-control" id="booklistName" required>
+          </div>
+          <div class="mb-3">
+            <label for="booklistAuthor" class="form-label">লেখক</label>
+            <input type="text" class="form-control" id="booklistAuthor">
+          </div>
+          <div class="mb-3">
+            <label for="booklistSubject" class="form-label">বিষয়</label>
+            <input type="text" class="form-control" id="booklistSubject">
+          </div>
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary">সংরক্ষণ করুন</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Fees Modal -->
+<div class="modal fade" id="feesModal" tabindex="-1" aria-labelledby="feesModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="feesModalLabel">নতুন ফি তথ্য</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="feesForm">
+          <input type="hidden" id="feesId">
+          <div class="mb-3">
+            <label for="feesClass" class="form-label">ক্লাস</label>
+            <select class="form-select" id="feesClass" required>
+              <option value="nursery">নার্সারি</option>
+              <option value="class_1">প্রথম শ্রেণী</option>
+              <option value="class_2">দ্বিতীয় শ্রেণী</option>
+              <option value="class_3">তৃতীয় শ্রেণী</option>
+              <option value="class_4">চতুর্থ শ্রেণী</option>
+              <option value="class_5">পঞ্চম শ্রেণী</option>
+              <option value="class_6">ষষ্ঠ শ্রেণী</option>
+              <option value="class_7">সপ্তম শ্রেণী</option>
+              <option value="class_8">অষ্টম শ্রেণী</option>
+              <option value="class_9">নবম শ্রেণী</option>
+              <option value="class_10">দশম শ্রেণী</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="monthlyFee" class="form-label">মাসিক বেতন (টাকা)</label>
+            <input type="number" class="form-control" id="monthlyFee" required>
+          </div>
+          <div class="mb-3">
+            <label for="otherCharges" class="form-label">অন্যান্য চার্জ (টাকা)</label>
+            <input type="number" class="form-control" id="otherCharges">
+          </div>
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary">সংরক্ষণ করুন</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Vacation Modal -->
+<div class="modal fade" id="vacationModal" tabindex="-1" aria-labelledby="vacationModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="vacationModalLabel">নতুন ছুটি</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="vacationForm">
+          <input type="hidden" id="vacationId">
+          <div class="mb-3">
+            <label for="vacationName" class="form-label">ছুটির নাম</label>
+            <input type="text" class="form-control" id="vacationName" required>
+          </div>
+          <div class="mb-3">
+            <label for="vacationDate" class="form-label">তারিখ</label>
+            <input type="text" class="form-control" id="vacationDate" placeholder="যেমন: ২৫-১২-২০২৫" required>
+          </div>
+          <div class="mb-3">
+            <label for="vacationTotalDays" class="form-label">মোট দিন</label>
+            <input type="number" class="form-control" id="vacationTotalDays" required>
+          </div>
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary">সংরক্ষণ করুন</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Member Modal -->
+<div class="modal fade" id="memberModal" tabindex="-1" aria-labelledby="memberModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="memberModalLabel">নতুন সদস্য</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="memberForm">
+          <input type="hidden" id="memberId">
+          <div class="mb-3">
+            <label for="memberName" class="form-label">নাম</label>
+            <input type="text" class="form-control" id="memberName" required>
+          </div>
+          <div class="mb-3">
+            <label for="memberPosition" class="form-label">পদ</label>
+            <input type="text" class="form-control" id="memberPosition" required>
+          </div>
+          <div class="mb-3">
+            <label for="memberImageUrl" class="form-label">ছবির URL</label>
+            <input type="url" class="form-control" id="memberImageUrl" required>
+          </div>
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary">সংরক্ষণ করুন</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteConfirmModalLabel">নিশ্চিত করুন</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>আপনি কি এই আইটেমটি মুছে ফেলতে নিশ্চিত?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">না, বাতিল করুন</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">হ্যাঁ, মুছে ফেলুন</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Alert Placeholder -->
+<div id="alert-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js";
+    import { getAuth, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-auth.js";
+    import { getDatabase, ref, onValue, push, set, update, remove } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-database.js";
+    import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC2uITWHyT5LGxDr38pgJSlTzO3oNBnlg4",
+      authDomain: "gan-onneshon.firebaseapp.com",
+      databaseURL: "https://gan-onneshon-default-rtdb.firebaseio.com",
+      projectId: "gan-onneshon",
+      storageBucket: "gan-onneshon.appspot.com",
+      messagingSenderId: "955464357596",
+      appId: "1:955464357596:web:fdc618ba181d86dbae4619",
+      measurementId: "G-GY1D8SVB2H"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+    const storage = getStorage(app);
+
+    const __app_id = typeof window.__app_id !== 'undefined' ? window.__app_id : 'default-app-id';
+    const __initial_auth_token = typeof window.__initial_auth_token !== 'undefined' ? window.__initial_auth_token : null;
+    
+    // UI Elements
+    const contentArea = document.getElementById('content-area');
+    const dashboardNav = document.getElementById('dashboard-nav');
+    const modals = {
+      notice: new bootstrap.Modal(document.getElementById('noticeModal')),
+      assignment: new bootstrap.Modal(document.getElementById('assignmentModal')),
+      booklist: new bootstrap.Modal(document.getElementById('booklistModal')),
+      fees: new bootstrap.Modal(document.getElementById('feesModal')),
+      vacation: new bootstrap.Modal(document.getElementById('vacationModal')),
+      member: new bootstrap.Modal(document.getElementById('memberModal')),
+      deleteConfirm: new bootstrap.Modal(document.getElementById('deleteConfirmModal'))
+    };
+
+    // State
+    let itemToDelete = null;
+
+    // Helper Functions
+    const showLoader = () => document.getElementById('loader').classList.remove('hidden');
+    const hideLoader = () => document.getElementById('loader').classList.add('hidden');
+
+    function showAlert(message, type = 'success') {
+      const alertContainer = document.getElementById('alert-container');
+      const alertEl = document.createElement('div');
+      alertEl.className = `alert alert-${type} alert-dismissible fade show alert-message`;
+      alertEl.setAttribute('role', 'alert');
+      alertEl.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      `;
+      alertContainer.appendChild(alertEl);
+      setTimeout(() => alertEl.remove(), 5000);
+    }
+    
+    // Authentication
+    async function authenticate() {
+      try {
+        if (__initial_auth_token) {
+          await signInWithCustomToken(auth, __initial_auth_token);
+          console.log("Signed in with custom token.");
+        } else {
+          // This should ideally not happen in the Canvas environment, but is a fallback.
+          console.error("No custom auth token provided. Functionality may be limited.");
+        }
+      } catch (error) {
+        console.error("Authentication failed:", error);
+        showAlert("Authentication failed.", 'danger');
+      }
+    }
+
+    // Data Management Functions
+    function getCollectionRef(path) {
+      if (!db) {
+        showAlert("Firebase Realtime Database is not initialized.", 'danger');
+        return null;
+      }
+      return ref(db, `public_content/${path}`);
+    }
+
+    // RENDER FUNCTIONS
+    const renderTable = (data, tableBodyId, type) => {
+      const tableBody = document.getElementById(tableBodyId);
+      tableBody.innerHTML = '';
+      if (!data) return;
+
+      Object.keys(data).forEach(id => {
+        const item = data[id];
+        const row = document.createElement('tr');
+        row.setAttribute('data-id', id);
+        row.setAttribute('data-type', type);
+
+        switch (type) {
+          case 'notices':
+            row.innerHTML = `
+              <td>${item.title || ''}</td>
+              <td>${item.topic || ''}</td>
+              <td>${item.date || ''}</td>
+              <td>
+                <button class="btn btn-sm btn-edit" data-id="${id}" data-action="edit"><i class="bi bi-pencil-square"></i></button>
+                <button class="btn btn-sm btn-delete" data-id="${id}" data-action="delete"><i class="bi bi-trash"></i></button>
+              </td>
+            `;
+            break;
+          case 'assignments':
+            row.innerHTML = `
+              <td>${item.class || ''}</td>
+              <td>${item.subject || ''}</td>
+              <td>${item.title || ''}</td>
+              <td>${item.dueDate || ''}</td>
+              <td><a href="${item.fileUrl || '#'}" target="_blank">ফাইল</a></td>
+              <td>
+                <button class="btn btn-sm btn-edit" data-id="${id}" data-action="edit"><i class="bi bi-pencil-square"></i></button>
+                <button class="btn btn-sm btn-delete" data-id="${id}" data-action="delete"><i class="bi bi-trash"></i></button>
+              </td>
+            `;
+            break;
+          case 'booklists':
+            row.innerHTML = `
+              <td>${item.class || ''}</td>
+              <td>${item.name || ''}</td>
+              <td>${item.author || ''}</td>
+              <td>
+                <button class="btn btn-sm btn-edit" data-id="${id}" data-action="edit"><i class="bi bi-pencil-square"></i></button>
+                <button class="btn btn-sm btn-delete" data-id="${id}" data-action="delete"><i class="bi bi-trash"></i></button>
+              </td>
+            `;
+            break;
+          case 'fees':
+            row.innerHTML = `
+              <td>${item.class || ''}</td>
+              <td>${item.monthlyFee || '0'} টাকা</td>
+              <td>${item.otherCharges || '0'} টাকা</td>
+              <td>
+                <button class="btn btn-sm btn-edit" data-id="${id}" data-action="edit"><i class="bi bi-pencil-square"></i></button>
+                <button class="btn btn-sm btn-delete" data-id="${id}" data-action="delete"><i class="bi bi-trash"></i></button>
+              </td>
+            `;
+            break;
+          case 'images':
+            row.innerHTML = `
+              <td><a href="${item.url}" target="_blank">${item.url.slice(0, 30)}...</a></td>
+              <td>${item.caption || ''}</td>
+              <td>
+                <button class="btn btn-sm btn-delete" data-id="${id}" data-action="delete"><i class="bi bi-trash"></i></button>
+              </td>
+            `;
+            break;
+          case 'videos':
+            row.innerHTML = `
+              <td><a href="${item.url}" target="_blank">${item.url.slice(0, 30)}...</a></td>
+              <td>${item.caption || ''}</td>
+              <td>
+                <button class="btn btn-sm btn-delete" data-id="${id}" data-action="delete"><i class="bi bi-trash"></i></button>
+              </td>
+            `;
+            break;
+          case 'vacations':
+            row.innerHTML = `
+              <td>${item.name || ''}</td>
+              <td>${item.date || ''}</td>
+              <td>${item.totalDays || ''}</td>
+              <td>
+                <button class="btn btn-sm btn-edit" data-id="${id}" data-action="edit"><i class="bi bi-pencil-square"></i></button>
+                <button class="btn btn-sm btn-delete" data-id="${id}" data-action="delete"><i class="bi bi-trash"></i></button>
+              </td>
+            `;
+            break;
+          case 'members':
+            row.innerHTML = `
+              <td>${item.name || ''}</td>
+              <td>${item.position || ''}</td>
+              <td><a href="${item.imageUrl || '#'}" target="_blank">ছবি</a></td>
+              <td>
+                <button class="btn btn-sm btn-edit" data-id="${id}" data-action="edit"><i class="bi bi-pencil-square"></i></button>
+                <button class="btn btn-sm btn-delete" data-id="${id}" data-action="delete"><i class="bi bi-trash"></i></button>
+              </td>
+            `;
+            break;
+        }
+        tableBody.appendChild(row);
+      });
+    };
+
+    // LISTENERS
+    const listeners = {
+      notices: () => onValue(getCollectionRef('notices'), snapshot => renderTable(snapshot.val(), 'notices-table-body', 'notices')),
+      assignments: () => onValue(getCollectionRef('assignments'), snapshot => renderTable(snapshot.val(), 'assignments-table-body', 'assignments')),
+      booklists: () => onValue(getCollectionRef('booklists'), snapshot => renderTable(snapshot.val(), 'booklists-table-body', 'booklists')),
+      fees: () => onValue(getCollectionRef('fees'), snapshot => renderTable(snapshot.val(), 'fees-table-body', 'fees')),
+      routines: () => {
+        onValue(ref(db, 'public_content/routines/class_routine'), snapshot => {
+          const url = snapshot.val()?.url || '';
+          document.getElementById('classRoutineUrl').value = url;
+        });
+        onValue(ref(db, 'public_content/routines/exam_routine'), snapshot => {
+          const url = snapshot.val()?.url || '';
+          document.getElementById('examRoutineUrl').value = url;
+        });
+      },
+      gallery: () => {
+        onValue(getCollectionRef('gallery/images'), snapshot => renderTable(snapshot.val(), 'images-table-body', 'images'));
+        onValue(getCollectionRef('gallery/videos'), snapshot => renderTable(snapshot.val(), 'videos-table-body', 'videos'));
+      },
+      vacations: () => onValue(getCollectionRef('vacations'), snapshot => renderTable(snapshot.val(), 'vacations-table-body', 'vacations')),
+      principal: () => onValue(getCollectionRef('principal_message'), snapshot => {
+        const data = snapshot.val();
+        if (data) {
+          document.getElementById('principalName').value = data.name || '';
+          document.getElementById('principalImage').value = data.image || '';
+          document.getElementById('principalMessage').value = data.message || '';
+        }
+      }),
+      managing: () => onValue(getCollectionRef('managing_committee'), snapshot => renderTable(snapshot.val(), 'managing-table-body', 'members')),
+      schoolDetails: () => onValue(getCollectionRef('school_details'), snapshot => {
+        const data = snapshot.val();
+        if (data) {
+          document.getElementById('schoolHistory').value = data.history || '';
+          document.getElementById('schoolMission').value = data.mission || '';
+          document.getElementById('schoolVision').value = data.vision || '';
+        }
+      })
+    };
+
+    let currentContent = 'notices-content';
+
+    // Event Listeners for Navigation
+    dashboardNav.addEventListener('click', (e) => {
+      const target = e.target.closest('.nav-link');
+      if (!target) return;
+
+      e.preventDefault();
+      const contentId = target.dataset.contentId;
+      const sections = contentArea.querySelectorAll('.content-section');
+      const navLinks = dashboardNav.querySelectorAll('.nav-link');
+
+      sections.forEach(section => section.classList.add('d-none'));
+      navLinks.forEach(link => link.classList.remove('active'));
+
+      document.getElementById(contentId).classList.remove('d-none');
+      target.classList.add('active');
+
+      currentContent = contentId;
+    });
+
+    // Handle Forms and Clicks
+    document.getElementById('notices-table-body').closest('div.card').addEventListener('click', handleActions);
+    document.getElementById('assignments-table-body').closest('div.card').addEventListener('click', handleActions);
+    document.getElementById('booklists-table-body').closest('div.card').addEventListener('click', handleActions);
+    document.getElementById('fees-table-body').closest('div.card').addEventListener('click', handleActions);
+    document.getElementById('vacations-table-body').closest('div.card').addEventListener('click', handleActions);
+    document.getElementById('managing-table-body').closest('div.card').addEventListener('click', handleActions);
+    
+    // Other action buttons
+    document.getElementById('addImageBtn').addEventListener('click', handleGalleryAdd);
+    document.getElementById('addVideoBtn').addEventListener('click', handleGalleryAdd);
+    document.getElementById('images-table-body').addEventListener('click', handleDeleteClick);
+    document.getElementById('videos-table-body').addEventListener('click', handleDeleteClick);
+    document.getElementById('saveClassRoutineBtn').addEventListener('click', handleRoutineSave);
+    document.getElementById('saveExamRoutineBtn').addEventListener('click', handleRoutineSave);
+    document.getElementById('savePrincipalBtn').addEventListener('click', handlePrincipalSave);
+    document.getElementById('saveSchoolDetailsBtn').addEventListener('click', handleSchoolDetailsSave);
+    document.getElementById('confirmDeleteBtn').addEventListener('click', handleConfirmDelete);
+    
+    // Form Submissions
+    document.getElementById('noticeForm').addEventListener('submit', handleFormSubmit);
+    document.getElementById('assignmentForm').addEventListener('submit', handleFormSubmit);
+    document.getElementById('booklistForm').addEventListener('submit', handleFormSubmit);
+    document.getElementById('feesForm').addEventListener('submit', handleFormSubmit);
+    document.getElementById('vacationForm').addEventListener('submit', handleFormSubmit);
+    document.getElementById('memberForm').addEventListener('submit', handleFormSubmit);
+    
+    // Modals
+    const modalFormMapping = {
+      'noticeModal': 'noticeForm',
+      'assignmentModal': 'assignmentForm',
+      'booklistModal': 'booklistForm',
+      'feesModal': 'feesForm',
+      'vacationModal': 'vacationForm',
+      'memberModal': 'memberForm',
+    };
+    
+    // Logic for handling edit and delete clicks
+    async function handleActions(e) {
+      const target = e.target.closest('button');
+      if (!target) return;
+      const { action, id } = target.dataset;
+      const collectionName = target.closest('tbody').id.split('-')[0];
+      
+      if (action === 'edit') {
+        const modalId = `${collectionName}Modal`;
+        const formId = modalFormMapping[modalId];
+        const form = document.getElementById(formId);
+        const modalLabel = document.getElementById(`${collectionName}ModalLabel`);
+
+        form.reset();
+        document.getElementById(`${collectionName}Id`).value = id;
+        modalLabel.textContent = 'তথ্য সম্পাদনা';
+        showLoader();
+
+        const itemRef = ref(db, `public_content/${collectionName}/${id}`);
+        try {
+          const snapshot = await new Promise(resolve => onValue(itemRef, resolve, { onlyOnce: true }));
+          const data = snapshot.val();
+          if (data) {
+            for (const key in data) {
+              const input = form.querySelector(`#${collectionName}${key.charAt(0).toUpperCase() + key.slice(1)}`);
+              if (input) {
+                input.value = data[key];
+              }
+            }
+            modals[collectionName].show();
+          } else {
+            showAlert("ডেটা খুঁজে পাওয়া যায়নি।", 'danger');
+          }
+        } catch (e) {
+          console.error("Error fetching data for edit:", e);
+          showAlert("ডেটা লোড করতে ব্যর্থ।", 'danger');
+        } finally {
+          hideLoader();
+        }
+      } else if (action === 'delete') {
+        itemToDelete = { collectionName, id };
+        modals.deleteConfirm.show();
+      }
+    }
+    
+    // Logic for form submission
+    async function handleFormSubmit(e) {
+      e.preventDefault();
+      const form = e.target;
+      const formId = form.id;
+      const modalId = form.closest('.modal').id;
+      const collectionName = modalId.replace('Modal', '');
+      const idInput = document.getElementById(`${collectionName}Id`);
+      const id = idInput.value;
+
+      const data = {};
+      const inputs = form.querySelectorAll('input, select, textarea');
+      inputs.forEach(input => {
+        if (input.id !== idInput.id) {
+          data[input.id.replace(collectionName, '').charAt(0).toLowerCase() + input.id.replace(collectionName, '').slice(1)] = input.value;
+        }
+      });
+      
+      modals[collectionName].hide();
+      showLoader();
+      
+      try {
+        const itemRef = id ? ref(db, `public_content/${collectionName}/${id}`) : push(getCollectionRef(collectionName));
+        await set(itemRef, data);
+        showAlert("তথ্য সফলভাবে সংরক্ষণ করা হয়েছে।");
+      } catch (e) {
+        console.error("Error saving data:", e);
+        showAlert("তথ্য সংরক্ষণ করতে ব্যর্থ।", 'danger');
+      } finally {
+        hideLoader();
+      }
+    }
+    
+    // Logic for gallery add
+    async function handleGalleryAdd(e) {
+      const type = e.target.id === 'addImageBtn' ? 'images' : 'videos';
+      const urlInput = document.getElementById(type === 'images' ? 'newImageUrl' : 'newVideoUrl');
+      const captionInput = document.getElementById(type === 'images' ? 'newImageCaption' : 'newVideoCaption');
+      
+      if (!urlInput.value) {
+        showAlert("URL প্রদান করুন।", 'danger');
+        return;
+      }
+      
+      showLoader();
+      try {
+        const itemRef = push(getCollectionRef(`gallery/${type}`));
+        await set(itemRef, { url: urlInput.value, caption: captionInput.value || '' });
+        showAlert("আইটেম সফলভাবে যোগ করা হয়েছে।");
+        urlInput.value = '';
+        captionInput.value = '';
+      } catch (e) {
+        console.error("Error adding gallery item:", e);
+        showAlert("আইটেম যোগ করতে ব্যর্থ।", 'danger');
+      } finally {
+        hideLoader();
+      }
+    }
+    
+    // Logic for routine save
+    async function handleRoutineSave(e) {
+      const routineType = e.target.id === 'saveClassRoutineBtn' ? 'class_routine' : 'exam_routine';
+      const urlInput = document.getElementById(routineType === 'class_routine' ? 'classRoutineUrl' : 'examRoutineUrl');
+      
+      showLoader();
+      try {
+        await set(ref(db, `public_content/routines/${routineType}`), { url: urlInput.value });
+        showAlert("রুটিন সফলভাবে সংরক্ষণ করা হয়েছে।");
+      } catch (e) {
+        console.error("Error saving routine:", e);
+        showAlert("রুটিন সংরক্ষণ করতে ব্যর্থ।", 'danger');
+      } finally {
+        hideLoader();
+      }
+    }
+    
+    // Logic for principal save
+    async function handlePrincipalSave() {
+      const name = document.getElementById('principalName').value;
+      const image = document.getElementById('principalImage').value;
+      const message = document.getElementById('principalMessage').value;
+      
+      showLoader();
+      try {
+        await set(getCollectionRef('principal_message'), { name, image, message });
+        showAlert("প্রধান শিক্ষকের বার্তা সফলভাবে সংরক্ষণ করা হয়েছে।");
+      } catch (e) {
+        console.error("Error saving principal's message:", e);
+        showAlert("বার্তা সংরক্ষণ করতে ব্যর্থ।", 'danger');
+      } finally {
+        hideLoader();
+      }
+    }
+    
+    // Logic for school details save
+    async function handleSchoolDetailsSave() {
+      const history = document.getElementById('schoolHistory').value;
+      const mission = document.getElementById('schoolMission').value;
+      const vision = document.getElementById('schoolVision').value;
+      
+      showLoader();
+      try {
+        await set(getCollectionRef('school_details'), { history, mission, vision });
+        showAlert("স্কুলের বিবরণ সফলভাবে সংরক্ষণ করা হয়েছে।");
+      } catch (e) {
+        console.error("Error saving school details:", e);
+        showAlert("বিবরণ সংরক্ষণ করতে ব্যর্থ।", 'danger');
+      } finally {
+        hideLoader();
+      }
+    }
+    
+    // Logic for delete confirmation
+    async function handleDeleteClick(e) {
+      const target = e.target.closest('button');
+      if (!target || target.dataset.action !== 'delete') return;
+      
+      const id = target.dataset.id;
+      const type = target.closest('tbody').dataset.type;
+      
+      itemToDelete = { collectionName: type, id };
+      modals.deleteConfirm.show();
+    }
+    
+    // Logic for final deletion
+    async function handleConfirmDelete() {
+      if (!itemToDelete) return;
+      modals.deleteConfirm.hide();
+      showLoader();
+      
+      try {
+        await remove(ref(db, `public_content/${itemToDelete.collectionName}/${itemToDelete.id}`));
+        showAlert("আইটেম সফলভাবে মুছে ফেলা হয়েছে।");
+      } catch (e) {
+        console.error("Error deleting item:", e);
+        showAlert("আইটেমটি মুছে ফেলতে ব্যর্থ।", 'danger');
+      } finally {
+        hideLoader();
+        itemToDelete = null;
+      }
+    }
+    
+    // Initialization
+    async function initializeDashboard() {
+      await authenticate();
+      if (auth.currentUser) {
+        // Start listening to all data collections
+        listeners.notices();
+        listeners.assignments();
+        listeners.booklists();
+        listeners.fees();
+        listeners.routines();
+        listeners.gallery();
+        listeners.vacations();
+        listeners.principal();
+        listeners.managing();
+        listeners.schoolDetails();
+        showAlert("ড্যাশবোর্ড লোড হয়েছে, আপনি এখন তথ্য পরিবর্তন করতে পারেন।");
+      } else {
+        showAlert("লগইন করতে ব্যর্থ। পুনরায় চেষ্টা করুন।", 'danger');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', initializeDashboard);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ফলাফল - জ্ঞান অন্বেষণ প্রি-ক্যাডেট স্কুল এন্ড হাইস্কুল</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+  <style>
+    /* --- Custom Properties for Theming --- */
+    :root {
+        --brand-primary: #0b6efd;
+        --brand-accent: #0aa27a;
+        --brand-dark: #0f172a;
+        --brand-muted: #64748b;
+        --brand-light: #f8fafc;
+        --brand-card: #ffffff;
+        --brand-notice: #133a94;
+        --brand-notice-accent: #ffcc00;
+        --shadow-soft: 0 10px 20px rgba(2, 8, 23, .08);
+        --radius-large: 20px;
+        --radius-medium: 16px;
+        --header-bg: #800080;
+        --button-bg: #ff69b4;
+        --floating-button-bg: #a52a2a;
+    }
+
+    /* --- Base & Typography --- */
+    html, body {
+        font-family: "Noto Sans Bengali", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+        background-color: var(--brand-light);
+        color: var(--brand-dark);
+    }
+    
+    /* --- Header Styling --- */
+    .brandbar {
+        background: var(--brand-notice);
+        color: #fff;
+    }
+    
+    .brandbar .school-logo {
+        max-height: 80px;
+        width: auto;
+        border-radius: 8px;
+    }
+    
+    .school-name {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 0.3rem;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+    
+    .school-name-lg {
+        font-size: 2.8rem;
+    }
+    
+    .school-address {
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin-bottom: 0.3rem;
+        color: #f0f0f0;
+    }
+
+    /* Adjustments for smaller screens */
+    @media (max-width: 991.98px) {
+        .brandbar .school-logo {
+            max-height: 60px;
+        }
+        .school-name {
+            font-size: 1.8rem;
+            margin-top: 1rem;
+            margin-bottom: 0.2rem;
+        }
+        .school-address {
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+        }
+    }
+    
+    /* --- Main Navigation Bar --- */
+    .main-navbar {
+        background: #111827;
+        font-size: 15px;
+        z-index: 1020;
+    }
+    
+    .main-navbar .nav-link {
+        font-weight: 600;
+        padding: .6rem 1.2rem;
+        color: #fff !important;
+        transition: all 0.3s ease;
+    }
+    
+    .main-navbar .nav-link:hover,
+    .main-navbar .nav-link.active {
+        background-color: var(--button-bg);
+        border-radius: 5px;
+        color: #fff !important;
+    }
+
+    .main-navbar .dropdown-menu {
+        border-radius: 8px;
+        border: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
+        background-color: #111827;
+    }
+    .main-navbar .dropdown-item {
+        font-weight: 500;
+        padding: .5rem 1rem;
+        color: #fff;
+    }
+    .main-navbar .dropdown-item:hover {
+        background: #374151;
+        color: #fff;
+    }
+    
+    /* --- Submenu Functionality (FIX) --- */
+    .dropdown-menu .dropdown-submenu {
+      position: relative;
+    }
+    .dropdown-menu .dropdown-submenu > .dropdown-menu {
+      top: 0;
+      left: 100%;
+      margin-top: -1px;
+      display: none;
+    }
+    .dropdown-menu .dropdown-submenu.show > .dropdown-menu {
+      display: block;
+    }
+    .dropdown-menu .dropdown-toggle::after {
+      display: inline-block;
+      margin-left: .255em;
+      vertical-align: .255em;
+      content: "";
+      border-top: .3em solid transparent;
+      border-right: 0;
+      border-bottom: .3em solid transparent;
+      border-left: .3em solid;
+    }
+    @media (max-width: 991.98px) {
+        .dropdown-menu .dropdown-submenu > .dropdown-menu {
+            left: 0;
+            position: static;
+            float: none;
+            width: auto;
+            box-shadow: none;
+            border: none;
+            background: rgba(0, 0, 0, 0.1);
+        }
+        .dropdown-menu .dropdown-toggle::after {
+            border-top: .3em solid;
+            border-right: .3em solid transparent;
+            border-bottom: 0;
+            border-left: .3em solid transparent;
+        }
+    }
+    
+    /* --- Notice Ticker --- */
+    .notice-strip {
+      background: var(--brand-notice);
+      color: #fff;
+      position: sticky;
+      top: 140px;
+      z-index: 1010;
+    }
+    #ticker {
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    #ticker span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: ticker-animation 25s linear infinite;
+    }
+    @keyframes ticker-animation {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+    
+    /* --- Hero Carousel --- */
+    .hero {
+        margin-top: 0;
+    }
+    .hero .carousel-item {
+      height: 450px;
+    }
+    .hero .carousel-item img {
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+    }
+    .carousel-caption {
+      backdrop-filter: blur(6px);
+      background: rgba(15, 23, 42, .5);
+      border-radius: 14px;
+    }
+    
+    /* --- General Content & Sections --- */
+    .section {
+      padding: 60px 0;
+    }
+    .card-soft {
+      background: var(--brand-card);
+      border: 0;
+      border-radius: var(--radius-large);
+      box-shadow: var(--shadow-soft);
+    }
+    .card-soft .card-header {
+      background: transparent;
+      border: 0;
+      font-weight: 700;
+    }
+    .icon-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: inline-grid;
+      place-items: center;
+      background: #eef6ff;
+      flex-shrink: 0;
+    }
+    .list-check li {
+      margin: .4rem 0;
+    }
+    
+    /* --- Sidebar Widgets --- */
+    .widget {
+      background: #fff;
+      border-radius: var(--radius-medium);
+      box-shadow: var(--shadow-soft);
+    }
+    .widget .widget-header {
+      padding: .9rem 1.1rem;
+      border-bottom: 1px dashed #e5e7eb;
+      font-weight: 700;
+    }
+    .widget .widget-body {
+      padding: 1rem;
+    }
+    
+    /* --- Footer --- */
+    footer {
+      background: #111827;
+      color: #cbd5e1;
+    }
+    footer h6 {
+      color: #fff;
+      letter-spacing: .5px;
+    }
+    .footer-link {
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-link:hover {
+      color: #fff;
+    }
+    .social a {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #1f2937;
+      display: inline-grid;
+      place-items: center;
+      color: #e5e7eb;
+      transition: background-color 0.3s;
+    }
+    .social a:hover {
+      background: #374151;
+    }
+    .divider {
+      height: 1px;
+      background: #374151;
+      margin: 1.5rem 0;
+    }
+    
+    /* --- Back to Top Button --- */
+    .back-to-top {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 1050;
+      display: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--floating-button-bg);
+      border-color: var(--floating-button-bg);
+    }
+    .back-to-top:hover {
+      background-color: #7b2424;
+      border-color: #7b2424;
+    }
+
+    /* --- Custom Styles for Result Page Content --- */
+    .main-content {
+      flex-grow: 1;
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--brand-primary);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .result-section {
+      background-color: #f8f9fa;
+      padding: 2rem;
+      border-radius: 0.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .result-section h3 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--brand-accent);
+      border-bottom: 2px solid var(--brand-primary);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .result-details {
+      font-size: 1.1rem;
+    }
+    
+    .result-table {
+      margin-top: 1.5rem;
+      width: 100%;
+    }
+    .result-table th, .result-table td {
+      border: 1px solid #ccc;
+      padding: 8px;
+    }
+    .result-table th {
+      background-color: #e9ecef;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="brandbar border-bottom sticky-top" style="z-index: 1030;">
+    <div class="container-fluid py-3">
+      <div class="row align-items-center justify-content-center">
+        <div class="col-lg-2 col-md-3 col-sm-4 text-center mb-3 mb-lg-0">
+          <img src="https://i.ibb.co.com/pvKYPySd/logo.jpg" alt="জ্ঞান অন্বেষণ প্রি-ক্যাডেট স্কুল এন্ড হাইস্কুল লোগো" class="img-fluid school-logo">
+        </div>
+        <div class="col-lg-7 col-md-6 col-sm-8 text-center mb-3 mb-lg-0">
+          <h2 class="school-name school-name-lg">জ্ঞান অন্বেষণ প্রি-ক্যাডেট স্কুল এন্ড হাই-স্কুল</h2>
+          <p class="school-address">
+            <i class="bi bi-geo-alt-fill"></i> গ্রামীণ টাওয়ার সংলগ্ন, বানেশ্বার বাজার, গোবিন্দগঞ্জ,গাইবান্ধা </p>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-12 text-center">
+          <div class="btn-group" role="group" aria-label="Contact and Follow Us">
+            <div class="btn-group" role="group">
+              <button class="btn btn-outline-warning dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-person-fill"></i> Follow Us
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="https://www.facebook.com/profile.php?id=61578225627566" target="_blank"><i class="bi bi-facebook me-2"></i> Facebook</a></li>
+                <li><a class="dropdown-item" href="https://youtube.com/channel/UCSbXN13j7xstENZnTb4g5ZA?si=zJJJ-K9BM9FsdhGl" target="_blank"><i class="bi bi-youtube me-2"></i> YouTube</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark main-navbar sticky-top" style="z-index: 1020;">
+      <div class="container-fluid">
+        <button class="navbar-toggler my-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav d-flex justify-content-center flex-wrap mx-auto">
+            <li class="nav-item"><a class="nav-link" href="index.html">হোম</a></li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="administarationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">প্রশাসন</a>
+              <ul class="dropdown-menu" aria-labelledby="administarationDropdown">
+                <li><a class="dropdown-item" href="principal.html">প্রধান শিক্ষক</a></li>
+                <li><a class="dropdown-item" href="managing.html">ম্যানেজিং কমিটির সদস্য</a></li>
+              </ul>
+            </li>
+
+            <li><a class="dropdown-item" href="institutedetails.html">ইনস্টিটিউট বিবরণ</a></li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="listDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">সকল তালিকা</a>
+              <ul class="dropdown-menu" aria-labelledby="listDropdown">
+                <li><a class="dropdown-item" href="studentlist.html">শিক্ষার্থী তালিকা</a></li>
+                <li><a class="dropdown-item" href="teacherlist.html">শিক্ষক তালিকা</a></li>
+                <li><a class="dropdown-item" href="staff.html">কর্মচারী তথ্য</a></li>
+              </ul>
+            </li>
+            
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="routineDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">রুটিন সমূহ</a>
+              <ul class="dropdown-menu" aria-labelledby="routineDropdown">
+                <li><a class="dropdown-item" href="classroutine.html">ক্লাস রুটিন</a></li>
+                <li><a class="dropdown-item" href="examroutine.html">পরীক্ষার রুটিন</a></li>
+                <li><a class="dropdown-item" href="govtvacation.html" target="_blank">সরকারি ছুটির তালিকা</a></li>
+              </ul>
+            </li>
+
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="instituteInfoDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">ইনস্টিটিউট তথ্য</a>
+              <ul class="dropdown-menu" aria-labelledby="instituteInfoDropdown">
+              
+                
+                
+                <li class="dropdown-submenu">
+                  <a class="dropdown-item dropdown-toggle" href="#">একাডেমিক তথ্য</a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="detailsofschool.html">বিস্তারিত তথ্য</a></li>
+                    <li><a class="dropdown-item" href="dresscode.html .html">পোশাক কোড</a></li>
+                    <li><a class="dropdown-item" href="seatcapacity.html">সিট তথ্য</a></li>
+                    <li><a class="dropdown-item" href="syllabus.html">সিলেবাস তথ্য</a></li>
+                  </ul>
+                </li>
+                
+                <li><a class="dropdown-item" href="fees.html">ফি তথ্য</a></li>
+              </ul>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="galleryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">গ্যালারী</a>
+              <ul class="dropdown-menu" aria-labelledby="galleryDropdown">
+                <li><a class="dropdown-item" href="gallary.html">ছবি গ্যালারী</a></li>
+                <li><a class="dropdown-item" href="gallary.html">ভিডিও গ্যালারী</a></li>
+              </ul>
+            </li>
+
+              
+              <li><a class="dropdown-item" href="https://nctbbook.com/" target="_blank">সরকারি পাঠ্যবইসমুহ </a></li>
+
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="moreDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">আরো</a>
+              <ul class="dropdown-menu" aria-labelledby="moreDropdown">
+                <li><a class="dropdown-item" href="notice.html">সকল নোটিশ</a></li>
+                <li class="dropdown-submenu">
+                  <a class="dropdown-item dropdown-toggle" href="#">ডাউনলোড</a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="assignment.html">অ্যাসাইনমেন্ট</a></li>
+                    <li><a class="dropdown-item" href="#">রেকর্ডেড ক্লাস</a></li>
+                    <li><a class="dropdown-item" href="#">ডিজিটাল কনটেন্ট</a></li>
+                    <li><a class="dropdown-item" href="#">হ্যান্ড বুক</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            
+            <li><a class="dropdown-item" href="admission.html">ভর্তি</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">যোগাযোগ</a></li>
+            <li class="nav-item"><a class="nav-link" href="teacherpotal.html">শিক্ষক লগইন</a></li>
+            <li class="nav-item"><a class="nav-link" href="studentportal.html">শিক্ষার্থী লগইন</a></li>
+            <li class="nav-item"><a class="nav-link" href="director-login.html">পরিচালক লগইন</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <div class="notice-strip py-2">
+    <div class="container d-flex gap-3 align-items-center">
+      <span class="badge bg-warning text-dark fw-bold flex-shrink-0">নোটিশ</span>
+      <div id="ticker" class="flex-grow-1"><span id="tickerText">লোড হচ্ছে...</span></div>
+    </div>
+  </div>
+
+  <main class="main-content">
+    <div class="container">
+      <h1 class="section-title">ফলাফল</h1>
+      
+      <div class="result-section">
+        <h3 class="text-center">ফলাফল দেখতে সার্চ করুন</h3>
+        <form id="resultSearchForm" class="row g-3">
+          <div class="col-md-6">
+            <label for="classInput" class="form-label">ক্লাস</label>
+            <input type="text" class="form-control" id="classInput" required>
+          </div>
+          <div class="col-md-6">
+            <label for="rollInput" class="form-label">রোল নম্বর</label>
+            <input type="text" class="form-control" id="rollInput" required>
+          </div>
+          <div class="col-12 text-center">
+            <button type="submit" class="btn btn-primary mt-3">সার্চ করুন</button>
+          </div>
+        </form>
+        
+        <div id="resultDisplay" class="mt-4">
+          <p class="text-center">ফলাফল দেখতে ক্লাস এবং রোল নম্বর দিয়ে সার্চ করুন।</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="pt-5 pb-4 mt-4">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <h6 class="mb-3">আমাদের সম্পর্কে</h6>
+          <p class="text-secondary small">২০১৬ সালে প্রতিষ্ঠিত, জ্ঞান অন্বেষণ প্রি-ক্যাডেট স্কুল এন্ড হাইস্কুল গাইবান্ধা জেলার গোবিন্দগঞ্জ উপজেলার একটি স্বনামধন্য শিক্ষা প্রতিষ্ঠান। এখানে প্লে-গ্রুপ থেকে নবম শ্রেণি পর্যন্ত শিক্ষার্থীদের আধুনিক ও মানসম্মত শিক্ষা প্রদান করা হয়।</p>
+        </div>
+        <div class="col-sm-6 col-lg-2">
+          <h6 class="mb-3">দরকারী লিঙ্ক</h6>
+          <ul class="list-unstyled">
+            <li><a class="footer-link small d-block mb-2" href="result.html">ফলাফল</a></li>
+            <li><a class="footer-link small d-block mb-2" href="#">ডাউনলোড</a></li>
+            <li><a class="footer-link small d-block mb-2" href="notice.html">নোটিশ</a></li>
+          </ul>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+          <h6 class="mb-3">সাম্প্রতিক খবর</h6>
+          <ul class="list-unstyled" id="recentNews"><li class="text-secondary small">লোড হচ্ছে...</li></ul>
+        </div>
+        <div class="col-lg-3" id="contact">
+          <h6 class="mb-3">যোগাযোগ</h6>
+          <ul class="list-unstyled text-secondary small mb-3">
+            <li class="d-flex gap-2 mb-2"><i class="bi bi-geo-alt-fill text-primary mt-1"></i><span>গ্রামীণ টাওয়ার সংলগ্ন, বানেশ্বার বাজার, গোবিন্দগঞ্জ</span></li>
+            <li class="d-flex gap-2 mb-2"><i class="bi bi-telephone-fill text-primary mt-1"></i><span>01303-703561, 01751-246763</span></li>
+            <li class="d-flex gap-2 mb-2"><i class="bi bi-envelope-fill text-primary mt-1"></i><span>info.genonneshon@gmail.com</span></li>
+          </ul>
+          <div class="d-flex align-items-center gap-2 social mb-3">
+            <a href="https://www.facebook.com/profile.php?id=61578225627566" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="https://youtube.com/channel/UCSbXN13j7xstENZnTb4g5ZA?si=zJJJ-K9BM9FsdhGl" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="d-flex flex-wrap justify-content-between align-items-center small text-secondary">
+        <div>© <span id="year"></span>, All Rights Reserved.</div>
+        <div class="d-flex align-items-center">
+            Developed and Maintained by <a href="#" class="footer-link ms-1">ARMS info Tech BD</a>
+            <div class="social-links d-flex gap-2 ms-3">
+              <a href="#" target="_blank" class="footer-link" aria-label="Website"><i class="bi bi-link" style="font-size: 1.25rem;"></i></a>
+              <a href="https://www.facebook.com/mehedi.birat/" target="_blank" class="footer-link" aria-label="Facebook"><i class="bi bi-facebook" style="font-size: 1.25rem;"></i></a>
+              <a href="https://wa.me/8801727393466" target="_blank" class="footer-link" aria-label="WhatsApp"><i class="bi bi-whatsapp" style="font-size: 1.25rem;"></i></a>
+            </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <button id="btnTop" class="btn btn-primary back-to-top"><i class="bi bi-arrow-up"></i></button>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+    
+    const firebaseConfig = {
+      apiKey: "AIzaSyC2uITWHyT5LGxDr38pgJSlTzO3oNBnlg4",
+      authDomain: "gan-onneshon.firebaseapp.com",
+      projectId: "gan-onneshon",
+      storageBucket: "gan-onneshon.firebasestorage.app",
+      messagingSenderId: "955464357596",
+      appId: "1:955464357596:web:fdc618ba181d86dbae4619",
+      measurementId: "G-GY1D8SVB2H",
+      databaseURL: "https://gan-onneshon-default-rtdb.asia-southeast1.firebasedatabase.app/"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const dbRef = ref(database);
+
+    const resultSearchForm = document.getElementById('resultSearchForm');
+    const classInput = document.getElementById('classInput');
+    const rollInput = document.getElementById('rollInput');
+    const resultDisplay = document.getElementById('resultDisplay');
+
+    // Handle form submission for searching results
+    resultSearchForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const className = classInput.value.trim();
+        const rollNumber = rollInput.value.trim();
+
+        if (className === '' || rollNumber === '') {
+            resultDisplay.innerHTML = `<p class="text-center text-danger">অনুগ্রহ করে ক্লাস এবং রোল নম্বর উভয়ই প্রবেশ করান।</p>`;
+            return;
+        }
+
+        resultDisplay.innerHTML = `<p class="text-center">ফলাফল লোড হচ্ছে...</p>`;
+        
+        // Construct the database path based on class and roll number
+        // Assumes a data structure like: /results/Class 10/101
+        const resultPath = `results/${className}/${rollNumber}`;
+        
+        get(child(dbRef, resultPath)).then((snapshot) => {
+            if (snapshot.exists()) {
+                const resultData = snapshot.val();
+                renderResult(resultData, className, rollNumber);
+            } else {
+                resultDisplay.innerHTML = `<p class="text-center text-warning">দুঃখিত, কোনো ফলাফল পাওয়া যায়নি।</p>`;
+            }
+        }).catch((error) => {
+            console.error(error);
+            resultDisplay.innerHTML = `<p class="text-center text-danger">ফলাফল লোড করতে ব্যর্থ হয়েছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন।</p>`;
+        });
+    });
+
+    // Function to render the search result
+    function renderResult(data, className, rollNumber) {
+        let html = `
+            <div class="result-details mb-4">
+                <p><strong>শিক্ষার্থীর নাম:</strong> ${data.name || 'N/A'}</p>
+                <p><strong>ক্লাস:</strong> ${className}</p>
+                <p><strong>রোল নম্বর:</strong> ${rollNumber}</p>
+            </div>
+        `;
+        
+        if (data.marks) {
+            html += `
+                <table class="table table-bordered result-table">
+                    <thead>
+                        <tr>
+                            <th>বিষয়</th>
+                            <th>প্রাপ্ত নম্বর</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            for (const subject in data.marks) {
+                html += `
+                    <tr>
+                        <td>${subject}</td>
+                        <td>${data.marks[subject]}</td>
+                    </tr>
+                `;
+            }
+            html += `
+                    </tbody>
+                </table>
+            `;
+        } else {
+            html += `<p class="text-center text-warning">এই শিক্ষার্থীর জন্য কোনো মার্কস ডেটা পাওয়া যায়নি।</p>`;
+        }
+        
+        resultDisplay.innerHTML = html;
+    }
+
+    // --- Submenu Functionality (FIX) ---
+    function handleSubmenus() {
+        const submenuToggles = document.querySelectorAll('.dropdown-menu .dropdown-toggle');
+        submenuToggles.forEach(toggle => {
+            toggle.addEventListener('click', e => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const submenu = toggle.nextElementSibling;
+                const parentLi = toggle.closest('.dropdown-submenu');
+                
+                const parentMenu = toggle.closest('.dropdown-menu');
+                parentMenu.querySelectorAll('.dropdown-submenu.show').forEach(openSubmenu => {
+                    if (openSubmenu !== parentLi) {
+                        openSubmenu.classList.remove('show');
+                    }
+                });
+
+                if (parentLi) {
+                    parentLi.classList.toggle('show');
+                }
+            });
+        });
+
+        const mainDropdowns = document.querySelectorAll('.nav-item.dropdown');
+        mainDropdowns.forEach(dropdown => {
+            dropdown.addEventListener('hidden.bs.dropdown', () => {
+                document.querySelectorAll('.dropdown-submenu.show').forEach(submenu => {
+                    submenu.classList.remove('show');
+                });
+            });
+        });
+    }
+
+    const UI = {
+        yearEl: document.getElementById('year'),
+        btnTop: document.getElementById('btnTop'),
+        setup() {
+            if(this.yearEl) {
+                this.yearEl.textContent = new Date().getFullYear();
+            }
+            if(this.btnTop) {
+                window.addEventListener('scroll', () => {
+                    this.btnTop.style.display = window.scrollY > 300 ? 'block' : 'none';
+                });
+                this.btnTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+            }
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        UI.setup();
+        handleSubmenus();
+    });
+  </script>
+
+</body>
+</html>
